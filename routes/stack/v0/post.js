@@ -44,4 +44,11 @@ router.put('/:id', function(req, res, next){
     res.send('done')
 })
 
+router.delete('/:id', function(req, res, next){
+    Post.findByIdAndDelete(req.params.id, req.body, function(err, post){
+        if(err) return console.error(err);
+    })
+    res.send('done')
+})
+
 module.exports = router;
