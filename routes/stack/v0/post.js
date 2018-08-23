@@ -26,7 +26,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-    Post.find().exec(function (err, posts){
+    Post.find().sort({updatedAt: -1}).exec(function (err, posts){
         res.json(posts)
     })
 })
