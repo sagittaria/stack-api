@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/stack');
+var config = require('../config')
+mongoose.connect(config.dbURL);
 
 var postSchema = mongoose.Schema({
     category: String,
