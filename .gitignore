@@ -16,3 +16,5 @@ selenium-debug.log
 *.sln
 
 /routes/stack/config.js
+/cert/*.pem
+/cert/*.crt

@@ -6,7 +6,17 @@
 
 var app = require('../app');
 var debug = require('debug')('stack-api:server');
-var http = require('http');
+// var http = require('http');
+
+
+var https = require('https');
+var fs = require('fs');
+var path = require('path');
+
+var privateKey  = fs.readFileSync(path.join(__dirname, '../cert/private.pem'), 'utf8');
+var certificate = fs.readFileSync(path.join(__dirname, '../cert/file.crt'), 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
 
 /**
  * Get port from environment and store in Express.
@@ -19,13 +29,16 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app);
+var server = https.createServer(credentials, app); // https server
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, function () {
+  console.log('HTTPS Server is running on: https://localhost:%s', port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
