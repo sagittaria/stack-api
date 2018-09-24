@@ -3,7 +3,7 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var config = require('../config')
-mongoose.connect(config.dbURL);
+mongoose.connect(config.dbURL, {useNewUrlParser: true});
 
 var postSchema = mongoose.Schema({
     category: String,
@@ -27,7 +27,10 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-    Post.find().sort({updatedAt: -1}).exec(function (err, posts){
+    let page = parseInt(req.query.page)
+    let rows = parseInt(req.query.rows) > 50 ? 50 : parseInt(req.query.rows)
+
+    getPosts(page, rows).then(posts => {
         res.json(posts)
     })
 })
@@ -51,5 +54,17 @@ router.delete('/:id', function(req, res, next){
     })
     res.send('done')
 })
+
+async function getPosts(page, rows) {
+    let posts = {}
+    posts.page = page
+    posts.rows = rows
+    posts.total = await Post.countDocuments({}, (err, count)=> count).catch(err => { console.log(err) })
+    posts.list = posts.total > 0 ?
+                    await Post.find({}, null, {sort: '-updatedAt' , skip: (page-1)*rows, limit: rows}, (err, docs) => docs)
+                        .catch(err => { console.log(err) })
+                    : []
+    return posts
+}
 
 module.exports = router;
