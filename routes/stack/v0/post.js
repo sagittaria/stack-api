@@ -35,6 +35,30 @@ router.get('/', function(req, res, next) {
     })
 })
 
+router.get('/cache', function(req, res, next){
+  // TODO: 这个地方应该去研究下aggregate再回来改写！
+  Post.find({}, (err, docs) => {
+    let cachedStuff = {
+      categoryCount: {
+        idea: 0,
+        tech: 0,
+        other: 0
+      },
+      tagsCount: {}
+    }
+    let tagsCountMap = new Map()
+    docs.forEach(p => {
+      cachedStuff.categoryCount[p.category]++
+      p.tags.forEach(t => {
+        let cnt = tagsCountMap.has(t) ? tagsCountMap.get(t) : 0
+        tagsCountMap.set(t, ++cnt)
+      })
+    })
+    cachedStuff.tagsCount = map2obj(tagsCountMap)
+    res.json(cachedStuff)
+  })
+})
+
 router.get('/:id', function(req, res, next) {
     Post.findById(req.params.id, function(err, post){
         res.json(post)
@@ -44,15 +68,15 @@ router.get('/:id', function(req, res, next) {
 router.put('/:id', function(req, res, next){
     Post.findByIdAndUpdate(req.params.id, req.body, function(err, post){
         if(err) return console.error(err);
+        res.send('done')
     })
-    res.send('done')
 })
 
 router.delete('/:id', function(req, res, next){
     Post.findByIdAndDelete(req.params.id, req.body, function(err, post){
         if(err) return console.error(err);
+        res.send('done')
     })
-    res.send('done')
 })
 
 async function getPosts(page, rows) {
@@ -65,6 +89,14 @@ async function getPosts(page, rows) {
                         .catch(err => { console.log(err) })
                     : []
     return posts
+}
+
+function map2obj(m) {
+  let obj = Object.create(null);
+  for (let [k,v] of m) {
+    obj[k] = v;
+  }
+  return obj;
 }
 
 module.exports = router;
