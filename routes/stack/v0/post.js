@@ -44,7 +44,7 @@ router.get('/cache', function(req, res, next){
         tech: 0,
         other: 0
       },
-      tagsCount: {}
+      tagsCount: []
     }
     let tagsCountMap = new Map()
     docs.forEach(p => {
@@ -54,7 +54,7 @@ router.get('/cache', function(req, res, next){
         tagsCountMap.set(t, ++cnt)
       })
     })
-    cachedStuff.tagsCount = map2obj(tagsCountMap)
+    cachedStuff.tagsCount = map2arr(tagsCountMap)
     res.json(cachedStuff)
   })
 })
@@ -91,12 +91,12 @@ async function getPosts(page, rows) {
     return posts
 }
 
-function map2obj(m) {
-  let obj = Object.create(null);
+function map2arr(m) {
+  let arr = [] // TODO 这里也应该可以重写
   for (let [k,v] of m) {
-    obj[k] = v;
+    arr.push({tag: k, cnt: v})
   }
-  return obj;
+  return arr;
 }
 
 module.exports = router;
