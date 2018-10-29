@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var stackPostRouter = require('./routes/stack/v0/post');
+var stackOperatorRouter = require('./routes/stack/v0/operator');
 
 var app = express();
 
@@ -16,7 +17,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 设置允许跨域
-app.use(cors({origin: 'https://sagittaria.github.io', credentials: true}))
+app.use(cors({origin: ['https://sagittaria.github.io', 'https://kasoya.github.io'], credentials: true}))
 // 即便用nginx做反向代理，这里仍需要设置允许跨域的origin
 
 // view engine setup
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/stack/post', stackPostRouter);
+app.use('/stack/operator', stackOperatorRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
