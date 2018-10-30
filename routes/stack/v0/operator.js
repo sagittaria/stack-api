@@ -23,7 +23,7 @@ router.post('/', function(req, res, next) {
       var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), id: operator._id}, config.jwtKey) // 过期时间设为1hour
       res.json({ token })
     }else{
-      res.json({token: ''})
+      res.sendStatus(403)
     }
   })
 })
