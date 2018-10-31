@@ -8,6 +8,8 @@ var mongoose = require('mongoose');
 var config = require('../config')
 mongoose.connect(config.dbURL, {useNewUrlParser: true});
 
+var ee = require('./ErrorEnum')
+
 var operatorSchema = mongoose.Schema({
   username: String,
   password: String,
@@ -21,18 +23,22 @@ router.post('/', function(req, res, next) {
   Operator.findOne({username: req.body.username, password: pwd},(err, operator)=>{
     if(operator){
       var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), id: operator._id}, config.jwtKey) // 过期时间设为1hour
-      res.json({ token })
+      res.json({succeeded: true, token})
     }else{
-      res.sendStatus(403)
+      // res.sendStatus(403)
+      var message = ee.getPhrase(4001)
+      res.json({succeeded: false, message})
     }
   })
 })
 
 router.get('/', function(req, res, next){
   jwt.verify(req.header('X-token'), config.jwtKey, function(err, decoded){
-    if(err) return console.error(err)
+    if(err) {
+      return res.json({succeeded: false, message: err.message})
+    }
     Operator.findById(decoded.id, function(err, operator){
-      res.json({roles: operator.roles})
+      res.json({succeeded: true, roles: operator.roles})
     })
   })
 })
