@@ -1,5 +1,6 @@
 var crypto = require('crypto')
 var jwt = require('jsonwebtoken')
+var jvf = require('./JwtVerifyFilter')
 
 var express = require('express');
 var router = express.Router();
@@ -32,15 +33,19 @@ router.post('/', function(req, res, next) {
   })
 })
 
-router.get('/', function(req, res, next){
-  jwt.verify(req.header('X-token'), config.jwtKey, function(err, decoded){
-    if(err) {
-      return res.json({succeeded: false, message: err.message})
-    }
-    Operator.findById(decoded.id, function(err, operator){
-      res.json({succeeded: true, roles: operator.roles})
-    })
+router.get('/', jvf, function(req, res, next){
+  var decoded = jwt.decode(req.header('X-token'))
+  Operator.findById(decoded.id, function(err, operator){
+    res.json({succeeded: true, roles: operator.roles})
   })
+  // jwt.verify(req.header('X-token'), config.jwtKey, function(err, decoded){
+  //   if(err) {
+  //     return res.json({succeeded: false, message: err.message})
+  //   }
+  //   Operator.findById(decoded.id, function(err, operator){
+  //     res.json({succeeded: true, roles: operator.roles})
+  //   })
+  // })
 })
 
 module.exports = router;
