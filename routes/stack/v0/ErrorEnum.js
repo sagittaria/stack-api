@@ -1,5 +1,5 @@
 let map = new Map([
-  [4001, '登陆失败']
+  [4001, 'login failed']
 ])
 
 var ee = {}
