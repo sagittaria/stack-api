@@ -1,5 +1,6 @@
 let map = new Map([
-  [4001, 'login failed']
+  [4001, 'login failed'],
+  [4002, 'you are missing?!']
 ])
 
 var ee = {}

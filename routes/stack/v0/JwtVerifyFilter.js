@@ -6,7 +6,8 @@ let JwtVerifyFilter = (req, res, next)=>{
     if (err) {
       return res.json({succeeded: false, message: err.message})
     }
-    next()
+    req.decoded = decoded
+    next() // 如果token没问题，把decode结果set到req上，以便后面的middleware可直接取用
   })
 }
 
