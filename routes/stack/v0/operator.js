@@ -36,11 +36,10 @@ router.post('/', function(req, res, next) {
 router.get('/', jvf, function(req, res, next){
   var decoded = req.decoded // 如果jvf顺利通过了，那么req上会被set一个token-decoded
   Operator.findById(decoded.id, function(err, operator){
-    if(err) return console.log(err.message)
     if(operator){
       res.json({succeeded: true, roles: operator.roles})
     }else{
-      res.json({succeeded: false, message: ee.getPhrase(4002)})
+      res.json({succeeded: false, message: err.message || ee.getPhrase(4002)})
     }
   })
 })
