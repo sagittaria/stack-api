@@ -2,6 +2,10 @@ var jwt = require('jsonwebtoken')
 var config = require('../config')
 
 let JwtVerifyFilter = (req, res, next)=>{
+  if (req.url === '/' && req.method === 'POST') {
+    return next() // 有些路由要排除
+  }
+
   jwt.verify(req.header('X-token'), config.jwtKey, function(err, decoded){
     if (err) {
       return res.json({succeeded: false, message: err.message})

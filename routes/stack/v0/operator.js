@@ -19,6 +19,8 @@ var operatorSchema = mongoose.Schema({
 
 var Operator = mongoose.model('operator', operatorSchema)
 
+router.use(jvf) // middleware specified for this router
+
 router.post('/', function(req, res, next) {
   let pwd = crypto.createHash('md5').update(req.body.password).digest('hex')
   Operator.findOne({username: req.body.username, password: pwd},(err, operator)=>{
@@ -33,7 +35,7 @@ router.post('/', function(req, res, next) {
   })
 })
 
-router.get('/', jvf, function(req, res, next){
+router.get('/', function(req, res, next){
   var decoded = req.decoded // 如果jvf顺利通过了，那么req上会被set一个token-decoded
   Operator.findById(decoded.id, function(err, operator){
     if(operator){
