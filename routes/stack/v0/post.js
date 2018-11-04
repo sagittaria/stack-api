@@ -3,6 +3,8 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var config = require('../config')
+var jvf = require('./JwtVerifyFilter')
+
 mongoose.connect(config.dbURL, {useNewUrlParser: true});
 
 var postSchema = mongoose.Schema({
@@ -14,6 +16,8 @@ var postSchema = mongoose.Schema({
 })
 
 var Post = mongoose.model('post', postSchema)
+
+router.use(jvf)
 
 router.post('/', function(req, res, next) {
     // console.log(req.body)
@@ -28,10 +32,10 @@ router.post('/', function(req, res, next) {
 
 router.get('/', function(req, res, next) {
     let page = parseInt(req.query.page)
-    let rows = parseInt(req.query.rows) > 50 ? 50 : parseInt(req.query.rows)
+    let size = parseInt(req.query.size) > 50 ? 50 : parseInt(req.query.size)
 
-    getPosts(page, rows).then(posts => {
-        res.json(posts)
+    getPosts(page, size).then(posts => {
+        res.json({ ...posts, succeeded: true })
     })
 })
 
@@ -79,13 +83,13 @@ router.delete('/:id', function(req, res, next){
     })
 })
 
-async function getPosts(page, rows) {
+async function getPosts(page, size) {
     let posts = {}
     posts.page = page
-    posts.rows = rows
+    posts.size = size
     posts.total = await Post.countDocuments({}, (err, count)=> count).catch(err => { console.log(err) })
     posts.list = posts.total > 0 ?
-                    await Post.find({}, null, {sort: '-updatedAt' , skip: (page-1)*rows, limit: rows}, (err, docs) => docs)
+                    await Post.find({}, null, {sort: '-updatedAt' , skip: (page-1)*size, limit: size}, (err, docs) => docs)
                         .catch(err => { console.log(err) })
                     : []
     return posts

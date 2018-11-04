@@ -2,8 +2,17 @@ var jwt = require('jsonwebtoken')
 var config = require('../config')
 
 let JwtVerifyFilter = (req, res, next)=>{
-  if (req.url === '/' && req.method === 'POST') {
-    return next() // 有些路由要排除
+  // 有些路由不用验证jwt
+  if (/^\/stack\/operator/.test(req.baseUrl)) {
+    if (req.url === '/' && req.method === 'POST') { // 登陆dash
+      return next()
+    }
+  }
+
+  if (/^\/stack\/post/.test(req.baseUrl)) { // 关于posts的所有get请求
+    if (req.method === 'GET') {
+      return next()
+    }
   }
 
   jwt.verify(req.header('X-token'), config.jwtKey, function(err, decoded){
