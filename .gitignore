@@ -18,3 +18,5 @@ selenium-debug.log
 /routes/stack/config.js
 /cert/*.pem
 /cert/*.crt
+
+package-lock.json
