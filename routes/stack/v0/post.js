@@ -33,8 +33,9 @@ router.post('/', function(req, res, next) {
 router.get('/', function(req, res, next) {
     let page = parseInt(req.query.page)
     let size = parseInt(req.query.size) > 50 ? 50 : parseInt(req.query.size)
+    let category = req.query.category
 
-    getPosts(page, size).then(posts => {
+    getPosts(page, size, category).then(posts => {
         res.json({ ...posts, succeeded: true })
     })
 })
@@ -83,13 +84,15 @@ router.delete('/:id', function(req, res, next){
     })
 })
 
-async function getPosts(page, size) {
+async function getPosts(page, size, category) {
     let posts = {}
     posts.page = page
     posts.size = size
-    posts.total = await Post.countDocuments({}, (err, count)=> count).catch(err => { console.log(err) })
+
+    let c = category?{category}:{}
+    posts.total = await Post.countDocuments(c, (err, count)=> count).catch(err => { console.log(err) })
     posts.list = posts.total > 0 ?
-                    await Post.find({}, null, {sort: '-updatedAt' , skip: (page-1)*size, limit: size}, (err, docs) => docs)
+                    await Post.find(c, null, {sort: '-updatedAt' , skip: (page-1)*size, limit: size}, (err, docs) => docs)
                         .catch(err => { console.log(err) })
                     : []
     return posts
