@@ -66,7 +66,7 @@ router.get('/cache', function(req, res, next){
 
 router.get('/:id', function(req, res, next) {
     Post.findById(req.params.id, function(err, post){
-        res.json(post)
+        res.json({ post, succeeded: true})
     })
 });
 
