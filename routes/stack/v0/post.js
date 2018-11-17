@@ -20,14 +20,11 @@ var Post = mongoose.model('post', postSchema)
 router.use(jvf)
 
 router.post('/', function(req, res, next) {
-    // console.log(req.body)
-
     var p = new Post(req.body)
     p.save(function (err, p) {
         if(err) return console.error(err);
+        res.json({succeeded: true})
     })
-
-    res.send('done')
 });
 
 router.get('/', function(req, res, next) {
@@ -73,7 +70,7 @@ router.get('/:id', function(req, res, next) {
 router.put('/:id', function(req, res, next){
     Post.findByIdAndUpdate(req.params.id, req.body, function(err, post){
         if(err) return console.error(err);
-        res.send('done')
+        res.json({succeeded: true})
     })
 })
 
