@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
+var session = require('express-session')
 
 var bodyParser = require('body-parser');
 
@@ -12,6 +13,14 @@ var stackPostRouter = require('./routes/stack/v0/post');
 var stackOperatorRouter = require('./routes/stack/v0/operator');
 
 var app = express();
+
+// 给captcha用到
+app.use(session({
+  secret: 'whatever',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 
 // 处理表单的
 app.use(bodyParser.urlencoded({ extended: true }));

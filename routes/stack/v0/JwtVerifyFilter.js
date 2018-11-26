@@ -7,6 +7,9 @@ let JwtVerifyFilter = (req, res, next)=>{
     if (req.url === '/' && req.method === 'POST') { // 登陆dash
       return next()
     }
+    if (/^\/getCaptcha/.test(req.url)) { // 向geetest申请验证码
+      return next()
+    }
   }
 
   if (/^\/stack\/post/.test(req.baseUrl)) { // 关于posts的所有get请求
