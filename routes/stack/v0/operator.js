@@ -64,18 +64,18 @@ router.post('/', function(req, res, next) {
       var message = ee.getPhrase(5002)
       return res.json({succeeded: false, message})
     }
-  })
-  // 上面顺利通过之后再去校验用户名和密码
-  let pwd = crypto.createHash('md5').update(req.body.password).digest('hex')
-  Operator.findOne({username: req.body.username, password: pwd},(err, operator)=>{
-    if(operator){
-      var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), id: operator._id}, config.jwtKey) // 过期时间设为1hour
-      res.json({succeeded: true, token})
-    }else{
-      // res.sendStatus(403)
-      var message = ee.getPhrase(4001)
-      res.json({succeeded: false, message})
-    }
+    // 上面顺利通过之后再去校验用户名和密码
+    let pwd = crypto.createHash('md5').update(req.body.password).digest('hex')
+    Operator.findOne({username: req.body.username, password: pwd},(err, operator)=>{
+      if(operator){
+        var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), id: operator._id}, config.jwtKey) // 过期时间设为1hour
+        res.json({succeeded: true, token})
+      }else{
+        // res.sendStatus(403)
+        var message = ee.getPhrase(4001)
+        res.json({succeeded: false, message})
+      }
+    })
   })
 })
 
