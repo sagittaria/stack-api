@@ -28,8 +28,7 @@ router.get('/getCaptcha', function(req, res, next){
     if (err) {
       console.error(err)
       var message = ee.getPhrase(5001)
-      res.json({succeeded: false, message})
-      return
+      return res.json({succeeded: false, message})
     }
 
     if (!data.success) {
@@ -60,10 +59,10 @@ router.post('/', function(req, res, next) {
     geetest_seccode: req.body.geetest_seccode
   }, function (err, success) {
     if (err) {// 网络错误
-      res.json({succeeded: false, message: err.message})
+      return res.json({succeeded: false, message: err.message})
     } else if (!success) {// 二次验证失败
       var message = ee.getPhrase(5002)
-      res.json({succeeded: false, message})
+      return res.json({succeeded: false, message})
     }
   })
   // 上面顺利通过之后再去校验用户名和密码
