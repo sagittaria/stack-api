@@ -14,7 +14,8 @@ var ee = require('./ErrorEnum')
 var operatorSchema = mongoose.Schema({
   username: String,
   password: String,
-  roles: Array
+  roles: Array,
+  login: String // github用户名
 })
 
 var Operator = mongoose.model('operator', operatorSchema)

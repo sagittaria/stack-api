@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var stackPostRouter = require('./routes/stack/v0/post');
 var stackOperatorRouter = require('./routes/stack/v0/operator');
+var githubRouter = require('./routes/github');
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/stack/post', stackPostRouter);
 app.use('/stack/operator', stackOperatorRouter);
+app.use('/github', githubRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
