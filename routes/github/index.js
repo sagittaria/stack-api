@@ -1,8 +1,11 @@
 var jwt = require('jsonwebtoken')
+var jwtKey = require('../stack/config').jwtKey
 var fetch = require('node-fetch')
 var config = require('./config')
 var express = require('express')
 var router = express.Router()
+
+var Operator = require('../model').Operator
 
 router.get('/signIn', function(req, res, next){
   let code = req.query.code
@@ -26,8 +29,18 @@ router.get('/signIn', function(req, res, next){
   }).then(async (accessToken) => {
     await fetch(`https://api.github.com/user?access_token=${accessToken}`).then(resp => {
       return resp.json()
-    }).then(userInfo => {
-      res.json({succeeded: true, login: userInfo.login})
+    }).then(async (userInfo) => {
+      var login = userInfo.login
+      await Operator.findOne({ login }, (err, operator)=>{
+        if(operator){
+          var token = jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), id: operator._id}, jwtKey) // 过期时间设为1hour
+          res.json({succeeded: true, token})
+        }else {
+          // res.sendStatus(403)
+          var message = 'login permission denied'
+          res.json({succeeded: false, message})
+        }
+      })
     })
   }).catch(err => {
     res.json({succeeded: false, message: err})
