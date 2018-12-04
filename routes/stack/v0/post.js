@@ -1,21 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
-var mongoose = require('mongoose');
-var config = require('../config')
 var jvf = require('./JwtVerifyFilter')
-
-mongoose.connect(config.dbURL, {useNewUrlParser: true});
-
-var postSchema = mongoose.Schema({
-    category: String,
-    title: String,
-    body: String,
-    updatedAt: Date,
-    tags: Array
-})
-
-var Post = mongoose.model('post', postSchema)
+var Post = require('../../model').Post
 
 router.use(jvf)
 

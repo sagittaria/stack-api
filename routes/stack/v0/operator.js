@@ -1,24 +1,11 @@
 var crypto = require('crypto')
 var jwt = require('jsonwebtoken')
 var jvf = require('./JwtVerifyFilter')
-
 var express = require('express');
 var router = express.Router();
-
-var mongoose = require('mongoose');
 var config = require('../config')
-mongoose.connect(config.dbURL, {useNewUrlParser: true});
-
 var ee = require('./ErrorEnum')
-
-var operatorSchema = mongoose.Schema({
-  username: String,
-  password: String,
-  roles: Array,
-  login: String // github用户名
-})
-
-var Operator = mongoose.model('operator', operatorSchema)
+var Operator = require('../../model').Operator
 
 router.use(jvf) // middleware specified for this router
 

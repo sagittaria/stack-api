@@ -1,7 +1,6 @@
 var jwt = require('jsonwebtoken')
 var fetch = require('node-fetch')
 var config = require('./config')
-
 var express = require('express')
 var router = express.Router()
 
