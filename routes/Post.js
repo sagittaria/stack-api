@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jvf = require('./JwtVerifyFilter')
-var Post = require('../../model').Post
+var Post = require('../model').Post
 
 router.use(jvf)
 

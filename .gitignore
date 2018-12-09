@@ -15,10 +15,8 @@ selenium-debug.log
 *.njsproj
 *.sln
 
-/routes/github/config.js
-/routes/stack/captcha.js
-/routes/stack/config.js
 /cert/*.pem
 /cert/*.crt
+/config/index.js
 
 package-lock.json

@@ -9,9 +9,9 @@ var session = require('express-session')
 var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
-var stackPostRouter = require('./routes/stack/v0/post');
-var stackOperatorRouter = require('./routes/stack/v0/operator');
-var githubRouter = require('./routes/github');
+var stackPostRouter = require('./routes/Post');
+var stackOperatorRouter = require('./routes/Operator');
+var githubRouter = require('./routes/Github');
 
 var app = express();
 

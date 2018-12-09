@@ -1,15 +1,16 @@
 var crypto = require('crypto')
 var jwt = require('jsonwebtoken')
+var express = require('express')
+var router = express.Router()
+
 var jvf = require('./JwtVerifyFilter')
-var express = require('express');
-var router = express.Router();
-var config = require('../config')
 var ee = require('./ErrorEnum')
-var Operator = require('../../model').Operator
+var config = require('../config')
+var Operator = require('../model').Operator
 
 router.use(jvf) // middleware specified for this router
 
-var captcha = require('../captcha')
+var captcha = require('../config').captcha
 router.get('/getCaptcha', function(req, res, next){
   // 向极验申请每次验证所需的challenge
   captcha.register(null, function (err, data) {
